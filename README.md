@@ -1,4 +1,4 @@
-# Decentralized Starknet Bot
+# ShellOnStark
 
 ![Alt text](./images/image.png)
 
