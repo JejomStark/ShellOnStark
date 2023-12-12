@@ -12,7 +12,10 @@
   "dependencies": {
     "@avnu/avnu-sdk": "^1.2.4",
     "chalk": "^5.3.0",
+    "cli-table3": "^0.6.3",
     "ethers": "^6.9.0",
+    "fs": "^0.0.1-security",
+    "path": "^0.12.7",
     "starknet": "^5.24.3"
   }
 }
