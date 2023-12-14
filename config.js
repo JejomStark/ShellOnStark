@@ -5,7 +5,7 @@ const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
 const config = {
     files: { 
-        tokens_list: path.join(__dirname, 'consts', 'personal_tokens.json')
+        tokens_list: path.join(__dirname, 'files', 'personal_tokens.json')
     }
 };
 
