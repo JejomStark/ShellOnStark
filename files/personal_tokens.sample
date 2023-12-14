@@ -1,0 +1,6 @@
+{
+    "##TOKEN_NAME##": {
+        "contract":"##TOKEN_CONTRACT##",
+        "decimal": "##TOKEN_DECIMAL##"
+    }
+}
