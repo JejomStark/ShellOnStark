@@ -1,8 +1,9 @@
 import inquirer from 'inquirer';
 import chalk from 'chalk'
-import { promptSwap } from './lib/avnu.js';
-import * as dotenv from "dotenv";
+import { avnuMenu } from './lib/avnu.js';
 import { displayWalletPortfolio } from './lib/wallet.js';
+import * as dotenv from "dotenv";
+
 dotenv.config();
 
 const logo = chalk.grey(`
@@ -37,29 +38,33 @@ const logo = chalk.grey(`
     $$$$$$$$$$$$$$$ffffrvXUJCCJUXvrffff$$$$$$$$$$$$$$$
 `);
 
-
 /**
  * Function to display the Bot prompt
  * @returns 
  */
 async function promptBot() {
+    
     while (true) {
         console.log(chalk.blue(logo));
-
+        console.log(`Currently on : ${chalk.yellow(process.env.SWAP_ENV)} \n`)
         const mainMenuQuestion = [
             {
                 type: 'list',
                 name: 'action',
                 message: 'What would you like to do?',
-                choices: ['Perform a swap on Avnu', 'Portfolio visualization', 'Exit'],
+                choices: [
+                    'Avnu',                    
+                    'Portfolio visualization', 
+                    'Exit'
+                ],
             },
         ];
 
         const mainMenuAnswer = await inquirer.prompt(mainMenuQuestion);
 
         switch (mainMenuAnswer.action) {
-            case 'Perform a swap on Avnu':
-                await promptSwap(); 
+            case 'Avnu':
+                await avnuMenu(); 
                 break;
             case 'Portfolio visualization':
                 await displayWalletPortfolio();
