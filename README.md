@@ -39,11 +39,21 @@ npm run start
 
 Just follow the prompt.
 
-![Alt text](images/swap.png)
+![Alt text](images/avnu_swap.png)
+
+### AVNU multiswap
+
+To initiate a multiswap, users must provide their swap parameters in the following format:
+```bash
+[CRYPTO_SYMBOL]:[PERCENTAGE_TO_SWAP]->[TARGET_CRYPTO_SYMBOL], ...
+```
+eg:  `eth:80%->usdc, usdc:90%->eth`
+
+![Alt text](images/avnu_multiswap.png)
 
 ### Portfolio visualization
 
-1. Add the tokens of your choice to the `files/personal_tokens.json` file. An example is provided in the `files/personal_tokens.sample` file.
+1. You have the option to add additional tokens of your choice by creating and customizing the `files/personal_tokens.json` file. An example configuration is provided in the `files/personal_tokens.sample` file to guide you through this process.
 2. Access the bot menu and select 'Portfolio Visualization' to see your assets.
 
 ![Portfolio](images/portfolio.png)
