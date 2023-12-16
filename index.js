@@ -3,7 +3,7 @@ import chalk from 'chalk'
 import { avnuMenu } from './lib/avnu.js';
 import { displayWalletPortfolio } from './lib/wallet.js';
 import * as dotenv from "dotenv";
-
+import { existsSync } from 'fs';
 dotenv.config();
 
 const logo = chalk.grey(`
@@ -43,50 +43,54 @@ const logo = chalk.grey(`
  * @returns 
  */
 async function promptBot() {
-    
-    while (true) {
-        console.log(chalk.blue(logo));
-        console.log(`Currently on : ${chalk.yellow(process.env.SWAP_ENV)} \n`)
-        const mainMenuQuestion = [
-            {
-                type: 'list',
-                name: 'action',
-                message: 'What would you like to do?',
-                choices: [
-                    'Avnu',                    
-                    'Portfolio visualization', 
-                    'Exit'
-                ],
-            },
-        ];
+    // check is .env file is present.
+    if (!existsSync('./.env')) {
+        console.log(chalk.red("The .env file is missing. Please create it."))
+    } else {
+        while (true) {
+            console.log(chalk.blue(logo));
+            console.log(`Currently on : ${chalk.yellow(process.env.SWAP_ENV)} \n`)
+            const mainMenuQuestion = [
+                {
+                    type: 'list',
+                    name: 'action',
+                    message: 'What would you like to do?',
+                    choices: [
+                        'Avnu',
+                        'Portfolio visualization',
+                        'Exit'
+                    ],
+                },
+            ];
 
-        const mainMenuAnswer = await inquirer.prompt(mainMenuQuestion);
+            const mainMenuAnswer = await inquirer.prompt(mainMenuQuestion);
 
-        switch (mainMenuAnswer.action) {
-            case 'Avnu':
-                await avnuMenu(); 
-                break;
-            case 'Portfolio visualization':
-                await displayWalletPortfolio();
-                break;
-            case 'Exit':
-                console.log(chalk.blue('Goodbye!'));
-                return;
-            default:                
-                break;
-        }
-
-        const continuePrompt = await inquirer.prompt([
-            {
-                type: 'confirm',
-                name: 'continue',
-                message: 'Do you want to perform another action?'
+            switch (mainMenuAnswer.action) {
+                case 'Avnu':
+                    await avnuMenu();
+                    break;
+                case 'Portfolio visualization':
+                    await displayWalletPortfolio();
+                    break;
+                case 'Exit':
+                    console.log(chalk.blue('Goodbye!'));
+                    return;
+                default:
+                    break;
             }
-        ]);
 
-        if (!continuePrompt.continue) {
-            console.log(chalk.blue('Goodbye!'));
-            break;
+            const continuePrompt = await inquirer.prompt([
+                {
+                    type: 'confirm',
+                    name: 'continue',
+                    message: 'Do you want to perform another action?'
+                }
+            ]);
+
+            if (!continuePrompt.continue) {
+                console.log(chalk.blue('Goodbye!'));
+                break;
+            }
         }
     }
 }
