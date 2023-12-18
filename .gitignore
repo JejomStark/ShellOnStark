@@ -1,3 +1,7 @@
 .env
 node_modules/
 files/personal_tokens.json
+files/executed_swap.json
+files/scheduled_swap.json
+logs/*
+!logs/.gitkeep
