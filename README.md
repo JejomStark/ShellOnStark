@@ -8,7 +8,7 @@ It offers features such as token swapping and portfolio visualization, making th
 
 ## Features
 
-* AVNU Swap: Allows easy token swapping.
+* AVNU Swap: Allows easy token swapping and scheduling.
 * Portfolio Visualization: Add your personal tokens to view your portfolio.
 
 ## Initial Setup
@@ -154,6 +154,15 @@ To stop the scheduled execution and remove the PM2 startup configuration:
 Access the bot menu and select 'Portfolio Visualization' to see your assets.
 
 ![Portfolio](images/portfolio.png)
+
+
+## 🚧 Important Notice
+
+Please be aware that this bot is in its developmental stages and should be utilized with caution. 
+
+It is continuously evolving, and while it aims to be reliable, it may not be fully suited for critical or high-stakes applications at this stage. 
+
+We encourage user feedback and contributions to enhance its capabilities and stability.
 
 ## Your Feedback Matters!
 
