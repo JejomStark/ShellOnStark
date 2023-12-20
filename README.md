@@ -8,7 +8,7 @@ It offers features such as token swapping and portfolio visualization, making th
 
 ## Features
 
-* AVNU Swap: Allows easy token swapping.
+* AVNU Swap: Allows easy token swapping and scheduling.
 * Portfolio Visualization: Add your personal tokens to view your portfolio.
 
 ## Initial Setup
@@ -35,6 +35,13 @@ To start the bot, run the following command:
 ```
 npm run start
 ```
+
+### Add custom tokens
+
+You have the option to add additional tokens of your choice by creating and customizing the `files/personal_tokens.json` file. 
+
+An example configuration is provided in the `files/personal_tokens.sample` file to guide you through this process.
+
 ### AVNU swap
 
 Just follow the prompt.
@@ -51,12 +58,111 @@ eg:  `eth:80%->usdc, usdc:90%->eth`
 
 ![Alt text](images/avnu_multiswap.png)
 
+### AVNU Swap Scheduler
+
+#### Configuring the Scheduler
+
+By default, the scheduler checks every 15 minutes between 01:00 and 05:00 AM UTC if the gas fees exceed $1.
+
+To choose the right timeframe for your Ethereum transactions, you can refer to the heatmap on Etherscan's gas tracker. 
+This tool provides valuable insights to help you determine the best times for making transactions. 
+
+Check it out here: [Etherscan Gas Tracker Heatmap](https://etherscan.io/gastracker#heatmap_gasprice)
+
+To customize these settings:
+
+* **Execution Schedule**: Edit the `ecosystem.config.cjs` file:
+```javascript
+cron_restart: '0 */15 01-05 * * *'
+```
+
+* **Maximum Gas Fees**: Update the config.js file:
+```javascript
+max_gas_fees_in_usd: 1 // 1$
+```
+
+#### Launch the scheduler
+
+1. **Install PM2** (if not already installed):
+
+```bash
+npm install pm2 -g
+```
+2. Create a Logs Directory:
+
+```bash
+mkdir logs
+```
+
+3. **Start the Application with PM2:**
+
+```bash
+pm2 start ecosystem.config.js
+```
+ 4. **Save PM2 Configuration:**
+
+```bash
+pm2 save
+```
+5. **Set Up PM2 Startup Script** (to ensure your processes are restarted after a reboot).
+```bash
+pm2 startup
+```
+**Important Note**
+
+When setting up the PM2 startup script, PM2 will provide you with a command after executing `pm2 startup`. **Do not forget to run this command**. 
+
+It's essential for ensuring that your processes are restarted after a system reboot.
+
+#### Add a Swap Schedule
+
+Run the following command to start the main bot:
+
+```bash
+npm run start
+```
+Navigate to Avnu menu -> Schedule a Swap and follow the prompts.
+
+The main bot creates a file named `files/scheduled_swap.json` which contains the scheduled swaps.
+
+The created scheduler will process swaps added to `files/scheduled_swap.json` and log execution reports in `files/executed_swap.json`.
+
+For more information, check the logs in the `./logs` directory.
+
+#### Monitoring and Logs:
+
+* Use `pm2 monit` to monitor processes.
+* Use `pm2 logs` for real-time logs.
+
+#### Remove the scheduler
+
+To stop the scheduled execution and remove the PM2 startup configuration:
+
+1. **Disable PM2 Startup Script**: 
+   To prevent the application from automatically starting on system boot, run:
+   ```bash
+   pm2 unstartup systemd
+   ```
+2. **Stop the scheduler**: 
+   If your application is currently running and managed by PM2 (e.g., gas-optimizer), you can stop it using:
+   ```bash
+   pm2 stop gas-optimizer
+   ```
+
 ### Portfolio visualization
 
-1. You have the option to add additional tokens of your choice by creating and customizing the `files/personal_tokens.json` file. An example configuration is provided in the `files/personal_tokens.sample` file to guide you through this process.
-2. Access the bot menu and select 'Portfolio Visualization' to see your assets.
+Access the bot menu and select 'Portfolio Visualization' to see your assets.
 
 ![Portfolio](images/portfolio.png)
+
+
+## 🚧 Important Notice
+
+Please be aware that this bot is in its developmental stages and should be utilized with caution. 
+
+It is continuously evolving, and while it aims to be reliable, it may not be fully suited for critical or high-stakes applications at this stage. 
+
+We encourage user feedback and contributions to enhance its capabilities and stability.
 
 ## Your Feedback Matters!
 
