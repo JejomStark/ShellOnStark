@@ -2,7 +2,7 @@ module.exports = {
     apps: [{
         name: 'gas-optimizer',
         script: './gasOptimizer.js',
-        cron_restart: '0 */15 01-05 * * *', // Cron expression for every 15min between 2 AM and 6 AM UTC
+        cron_restart: '0 */15 01-05 * * *', // Cron expression for every 15min between 1 AM and 5 AM UTC
         autorestart: false, // Prevents automatic restart outside the cron schedule
         out_file: './logs/gas_optimizer_out.json',
         error_file: './logs/gas_optimizer_error.json',
