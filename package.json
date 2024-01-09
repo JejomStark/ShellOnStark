@@ -1,6 +1,6 @@
 {
   "name": "ShellOnStark",
-  "version": "1.0.0",
+  "version": "1.0.2",
   "description": "A simple bot to interact with Starknet",
   "main": "index.js",
   "type": "module",
