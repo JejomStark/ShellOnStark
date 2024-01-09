@@ -13,7 +13,7 @@ module.exports = {
         {
             name: 'order-manager',
             script: './orderManager.js',
-            cron_restart: '0 */30 * * * *', // Cron expression for every 30min
+            cron_restart: '0 */5 * * * *', // Cron expression for every 30min
             autorestart: false, // Prevents automatic restart outside the cron schedule
             out_file: './logs/order_manager_out.json',
             error_file: './logs/order_manager_error.json',

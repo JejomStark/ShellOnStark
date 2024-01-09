@@ -3,8 +3,7 @@ import {
     readSwapFile,
     writeSwapInfo,
     deleteSwapInfo,
-    shouldExecuteTask,
-    formatAmountInWallet
+    shouldExecuteTask
 } from './lib/utils.js';
 
 import config from "./config.js"
@@ -29,7 +28,7 @@ async function main() {
     try {
 
         // Double check execution time to ensure it's the right time to execute tasks
-        // if (shouldExecuteTask('order-manager')) {
+        if (shouldExecuteTask('order-manager')) {
             // Reading scheduled orders from file
             const orders = await readSwapFile(config.files.scheduled_limit_order);
             console.log(`${orders.length} order(s) found.`)
@@ -42,15 +41,16 @@ async function main() {
                 for (const order of ordersCopy) {
                     // Prepare swap information for one token
                     const swapInfo = {
-                        from: order.from,
+                        from: order.assetToTrade,
                         amount: "1",
-                        to: order.to
+                        to: order.counterAsset
                     }
                     // Get swap quotes based on the swap information                    
                     const { quotes } = await getInfoSwapQuote(swapInfo, tokens, localWallet);
-                    console.log('"quotes', quotes)
+                    
                     // Decide if a swap should be performed based on the order and market quotes
-                    if (shouldExecuteSwap(order, quotes, tokens)) {
+                    if (shouldExecuteSwap(order, quotes)) {
+
                         // Perform the swap and store the result
                         const swapResult = await performSwap(order, tokens);
 
@@ -69,7 +69,7 @@ async function main() {
                     }
                 }
             }
-        // }
+        }
     } catch (error) {
         console.error('Error in main execution:', error);
     }
@@ -82,51 +82,72 @@ async function main() {
  * @param {Object} quotes - The market information returned by getInfoSwapQuote.
  * @returns {boolean} - Returns true if the conditions to execute the swap are met, otherwise false.
  */
-function shouldExecuteSwap(order, quotes, tokens) {
+function shouldExecuteSwap(order, quotes) {
+    let currentPrice;
+    const assetToTrade = order.assetToTrade;
+    const counterAsset = order.counterAsset;
+
+    // Choose the correct price value based on the order type
+    if (order.type === "buy_limit" || order.type === "buy_stop") {
+        currentPrice = quotes[0].buyAmountInUsd; // Price for buy orders
+    } else {
+        currentPrice = quotes[0].sellAmountInUsd; // Price for sell orders
+    }
+
+    const currentPriceInString = `(Current price: ${currentPrice})`;
+
+    // Determine 'from' and 'to' based on the order type    
+    if (order.type === "buy_limit" || order.type === "buy_stop") {
+        // For buy orders, the counterAsset is the 'from' asset
+        order.from = counterAsset;
+        order.to = assetToTrade;
+    } else {
+        // For sell orders, the assetToTrade is the 'from' asset
+        order.from = assetToTrade;
+        order.to = counterAsset;
+    }
     
-    const amount = formatAmountInWallet(quotes[0].buyAmount, tokens[order.to].decimal)
-    console.log('Amount', amount)
     // Check thresholds for buy limit orders
     if (order.type === "buy_limit" && order.price != null) {
         // Execute if the current selling price is equal to or less than the specified buy limit price
-        if (amount <= order.price) {
-            console.log(chalk.yellow(`Executing a buy limit order: buying ${order.from} at or below ${order.price} (Current price: ${quotes[0].sellAmountInUsd})`));
+        if (currentPrice <= order.price) {
+            console.log(chalk.yellow(`Executing a buy limit order: buying ${assetToTrade} at or below ${order.price} ${currentPriceInString}`));
             return true;
         } else {
-            console.log(chalk.redBright(`Buy limit order not executed: ${order.from} price is above the limit of ${order.price} (Current price: ${quotes[0].sellAmountInUsd})`));
+            console.log(chalk.redBright(`Buy limit order not executed: ${assetToTrade} price is above the limit of ${order.price} ${currentPriceInString}`));
         }
     }
 
     // Check thresholds for sell limit orders
     if (order.type === "sell_limit" && order.price != null) {
         // Execute if the current selling price is equal to or greater than the specified sell limit price
-        if (amount >= order.price) {
-            console.log(chalk.yellow(`Executing a sell limit order: selling ${order.from} at or above ${order.price} (Current price: ${quotes[0].sellAmountInUsd})`));
+        if (currentPrice >= order.price) {
+            console.log(chalk.yellow(`Executing a sell limit order: selling ${assetToTrade} at or above ${order.price}  ${currentPriceInString}`));
             return true;
         } else {
-            console.log(chalk.redBright(`Sell limit order not executed: ${order.from} price is below the limit of ${order.price} (Current price: ${quotes[0].sellAmountInUsd})`));
+            console.log(chalk.redBright(`Sell limit order not executed: ${assetToTrade} price is below the limit of ${order.price} ${currentPriceInString}`));
         }
     }
 
     // Check thresholds for buy stop orders
     if (order.type === "buy_stop" && order.price != null) {
         // Execute if the current selling price reaches or surpasses the specified buy stop price
-        if (amount >= order.price) {
-            console.log(chalk.yellow(`Executing a buy stop order: buying ${order.from} when the price reaches ${order.price} (Current price: ${quotes[0].sellAmountInUsd})`));
+        if (currentPrice >= order.price) {
+            console.log(chalk.yellow(`Executing a buy stop order: buying ${assetToTrade} when the price reaches ${order.price}  ${currentPriceInString}`));
             return true;
         } else {
-            console.log(chalk.redBright(`Buy stop order not executed: ${order.from} price has not reached the stop price of ${order.price} (Current price: ${quotes[0].sellAmountInUsd})`));
+            console.log(chalk.redBright(`Buy stop order not executed: ${assetToTrade} price has not reached the stop price of ${order.price} ${currentPriceInString}`));
         }
     }
 
     // Check thresholds for sell stop orders
     if (order.type === "sell_stop" && order.price != null) {
         // Execute if the current selling price falls to or below the specified sell stop price
-        if (amount <= order.price) {
-            console.log(chalk.yellow(`Executing a sell stop order: selling ${order.from} when the price falls to ${order.price} (Current price: ${quotes[0].sellAmountInUsd})`));
+        if (currentPrice <= order.price) {
+            console.log(chalk.yellow(`Executing a sell stop order: selling ${assetToTrade} when the price falls to ${order.price} ${currentPriceInString}`));
             return true;
         } else {
-            console.log(chalk.redBright(`Sell stop order not executed: ${order.from} price has not fallen to the stop price of ${order.price} (Current price: ${quotes[0].sellAmountInUsd})`));
+            console.log(chalk.redBright(`Sell stop order not executed: ${assetToTrade} price has not fallen to the stop price of ${order.price} ${currentPriceInString}`));
         }
     }
 
