@@ -26,7 +26,7 @@ import chalk from 'chalk'
 async function main() {
     try {
         // Double check execution time to ensure it's the right time to execute tasks
-        if (shouldExecuteTask()) {
+        if (shouldExecuteTask('gas-optimizer')) {
             // Reading scheduled swaps from file
             const swaps = await readSwapFile(config.files.scheduled_swap);
             if (swaps.length !== 0) {

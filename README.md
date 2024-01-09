@@ -81,7 +81,7 @@ cron_restart: '0 */15 01-05 * * *'
 max_gas_fees_in_usd: 1 // 1$
 ```
 
-#### Launch the scheduler
+#### Launching the scheduler
 
 1. **Install PM2** (if not already installed):
 
@@ -148,6 +148,61 @@ To stop the scheduled execution and remove the PM2 startup configuration:
    ```bash
    pm2 stop gas-optimizer
    ```
+
+### AVNU Order limit
+
+#### Configuring the Order Manager
+
+The default configuration has the order manager check every 30 minutes.
+
+To change this schedule, one should edit the cron_restart value in the `ecosystem.config.cjs` file :
+
+```javascript
+...
+name: 'order-manager',
+script: './orderManager.js',
+cron_restart: '0 */30 * * * *', // Cron expression for every 30min
+...        
+```
+
+#### Adding an order
+
+Instructions are given to start the main bot using the command below.
+
+```bash
+npm run start
+```
+
+Navigate to Avnu menu -> Schedule an order and follow the prompts.
+
+The main bot creates a file named `files/scheduled_limit_order.json` which contains the scheduled orders.
+
+The created order manager will process orders added to `files/scheduled_limit_order.json` and log execution reports in `files/executed_limit_order.json`.
+
+For more information, check the logs in the `./logs` directory.
+
+#### Launching the order manager
+
+1. **Start the Application with PM2:**
+
+```bash
+pm2 start ecosystem.config.js
+```
+2. **Save PM2 Configuration:**
+
+```bash
+pm2 save
+```
+3. **Set Up PM2 Startup Script** (to ensure your processes are restarted after a reboot).
+```bash
+pm2 startup
+```
+
+Note: You can monitor logs and remove the manager by following the same steps as the scheduler.
+
+[Monitoring and Logs](#monitoring-and-logs)
+
+[Remove the Order manager](#remove-the-scheduler)
 
 ### Portfolio visualization
 
