@@ -12,7 +12,7 @@ const config = {
         executed_swap: path.join(__dirname, 'files', 'executed_swap.json'),
         scheduled_limit_order: path.join(__dirname, 'files', 'scheduled_limit_order.json'),
         executed_limit_order: path.join(__dirname, 'files', 'executed_limit_order.json'),
-        dca_order: path.join(__dirname, 'files', 'dca_order.json'),        
+        dca_order: path.join(__dirname, 'files', 'dca_order.json')
     },
     swap: {
         slippage: 0.01, //1%
