@@ -41,7 +41,6 @@ async function main() {
 
                 if (order.type === 'dca' && order.periodicity === 'daily') {
                     console.log(`Executing daily DCA order for ${order.assetToBuy}-${order.counterAsset}`);
-                    // Place your DCA order execution logic here
                     const result = await performSwap(swap, tokens)
                     // Update order with execution date
                     order.executed.push({
@@ -52,7 +51,6 @@ async function main() {
                     const isWeeklyExecutionDay = moment().isoWeekday() === config.dca.weekly; 
                     if (isWeeklyExecutionDay) {
                         console.log(`Executing weekly DCA order for ${order.assetToBuy}-${order.counterAsset}`);
-                        // Place your DCA order execution logic here
                         const result = await performSwap(swap, tokens)
                         // Update order with execution date
                         order.executed.push({
@@ -64,7 +62,6 @@ async function main() {
                     const isFirstDayOfMonth = moment().date() === config.dca.montly;
                     if (isFirstDayOfMonth) {
                         console.log(`Executing monthly DCA order for ${order.assetToBuy}-${order.counterAsset}`);
-                        // Place your DCA order execution logic here
                         const result = await performSwap(swap, tokens)
                         // Update order with execution date
                         order.executed.push({
