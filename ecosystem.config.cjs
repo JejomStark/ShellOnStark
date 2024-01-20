@@ -19,6 +19,16 @@ module.exports = {
             error_file: './logs/order_manager_error.json',
             merge_logs: true, // Merge standard output and error logs
             log_date_format: 'YYYY-MM-DD HH:mm:ss'
+        },
+        {
+            name: 'dca-manager',
+            script: './dcaManager.js',
+            cron_restart: '0 0 5 * * *', // Cron expression for every day at 05:00AM
+            autorestart: false, // Prevents automatic restart outside the cron schedule
+            out_file: './logs/dca_manager_out.json',
+            error_file: './logs/dca_manager_error.json',
+            merge_logs: true, // Merge standard output and error logs
+            log_date_format: 'YYYY-MM-DD HH:mm:ss'
         }
     ]
 }
