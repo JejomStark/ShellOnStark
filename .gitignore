@@ -1,9 +1,6 @@
 .env
 node_modules/
-files/personal_tokens.json
-files/executed_swap.json
-files/scheduled_swap.json
-files/executed_limit_order.json
-files/scheduled_limit_order.json
+files/*
+!files/personal_tokens.sample
 logs/*
 !logs/.gitkeep

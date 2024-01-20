@@ -204,6 +204,63 @@ Note: You can monitor logs and remove the manager by following the same steps as
 
 [Remove the Order manager](#remove-the-scheduler)
 
+### AVNU DCA Order
+
+#### Configuring the DCA Manager
+
+The default configuration has the DCA manager check every day at 05:00AM.
+
+To change this schedule, one should edit the `cron_restart` value in the `ecosystem.config.cjs` file :
+
+```javascript
+...
+name: 'dca-manager',
+script: './dcaManager.js',
+cron_restart: '0 0 5 * * *', // Cron expression for every day at 05:00AM
+...        
+```
+
+#### Adding a DCA order
+
+Instructions are given to start the main bot using the command below.
+
+```bash
+npm run start
+```
+
+Navigate to Avnu menu -> Schedule a DCA and follow the prompts.
+
+Currently, the DCA manager supports daily, weekly, and monthly DCA schedules.
+
+The main bot creates a file named `files/dca_order.json` which contains the scheduled DCA.
+https://github.com/JejomStark/ShellOnStark/pull/8/conflict?name=README.md&ancestor_oid=a51fec032aff7a11876a410126611db5bf20d297&base_oid=ac91356008cc35711b87d0eca58ade59fd37186d&head_oid=3246ce602a7e4a644efd5566fcdd5c5f9b2c3150
+The DCA manager processes orders added to `files/dca_order.json` and logs execution reports in the same file.
+
+For more information, check the logs in the `./logs` directory.
+
+#### Launching the DCA manager
+
+1. **Start the Application with PM2:**
+
+```bash
+pm2 start ecosystem.config.js
+```
+2. **Save PM2 Configuration:**
+
+```bash
+pm2 save
+```
+3. **Set Up PM2 Startup Script** (to ensure your processes are restarted after a reboot).
+```bash
+pm2 startup
+```
+
+Note: You can monitor logs and remove the manager by following the same steps as the scheduler.
+
+[Monitoring and Logs](#monitoring-and-logs)
+
+[Remove the Order manager](#remove-the-scheduler)
+
 ### Portfolio visualization
 
 Access the bot menu and select 'Portfolio Visualization' to see your assets.
