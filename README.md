@@ -233,7 +233,7 @@ Navigate to Avnu menu -> Schedule a DCA and follow the prompts.
 Currently, the DCA manager supports daily, weekly, and monthly DCA schedules.
 
 The main bot creates a file named `files/dca_order.json` which contains the scheduled DCA.
-https://github.com/JejomStark/ShellOnStark/pull/8/conflict?name=README.md&ancestor_oid=a51fec032aff7a11876a410126611db5bf20d297&base_oid=ac91356008cc35711b87d0eca58ade59fd37186d&head_oid=3246ce602a7e4a644efd5566fcdd5c5f9b2c3150
+
 The DCA manager processes orders added to `files/dca_order.json` and logs execution reports in the same file.
 
 For more information, check the logs in the `./logs` directory.
